@@ -1,0 +1,32 @@
+.drawer-nav{
+	z-index: 99;
+}
+
+.drawer-hamburger {
+	width: 4rem;
+}
+
+.drawer-brand {
+    font-size: 2.5rem;
+}
+
+.drawer-menu-item{
+	font-size: 1.5rem;
+}
+
+#offbtn{
+	background-color: red;
+	color: white;
+	width: 200px;
+    height: 130px;
+}
+
+#onbtn{
+	background-color: green;
+	color: white;
+	width: 200px;
+    height: 130px;
+}
+.jumbotron {
+    padding: 40px 0;
+}

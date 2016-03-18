@@ -1,0 +1,5 @@
+{
+  "name": "gy1-controls",
+  "description": "Node.js client to send signals to bluetooth server",
+  "keywords": ["node", "express", "static"],
+}
