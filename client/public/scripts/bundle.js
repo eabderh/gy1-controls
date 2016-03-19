@@ -3,14 +3,14 @@ $(document).ready(function() {
   $('#connectbtn').click(
 	  	function () {
 	      makeRequest();
-	    }            
+	    }
     );
 });
 
 function makeRequest(){
-	var xhr = new XMLHttpRequest();
-	var url ='http://requestb.in/10i5w2v1'
-	xhr.open("GET", url);
-	xhr.send();
+//	var xhr = new XMLHttpRequest();
+//	var url ='http://requestb.in/10i5w2v1'
+//	xhr.open("GET", url);
+//	xhr.send();
 }
 },{}]},{},[1]);
