@@ -13,35 +13,31 @@ window.onload = function() {
 	alert('page load');
 	var socket = io.connect('http://www.gyrobot.tech:80');
 	socket.on('message', function (data) {
-//		alert(data);
-		if (data) {
-			element.innerHTML = data;
-			}
+		alert(data);
+//		if (data) {
+//			element.innerHTML = data;
+//			}
 		});
 	socket.on('timer', function (data) {
 		if (data) {
 			element.innerHTML = data.countdown;
 			}
 		});
-	socket.emit('message', 'client: first');
 
 	connectbtn.addEventListener("click", function(e) {
-		socket.emit('timer', 'client: reset');
+		socket.send('client');
 		}, false);
-//	connectbtn.addEventListener("click", function(e) {
-//		socket.emit('message', 'client: connectbtn');
-//		}, false);
 
 	onbtn.addEventListener("click", function(e) {
-		socket.emit('message', 'client: onbtn');
+		socket.emit('command', 'client: on');
 		}, false);
 
 	offbtn.addEventListener("click", function(e) {
-		socket.emit('message', 'client: offbtn');
+		socket.emit('command', 'client: off');
 		}, false);
 
 	swingbtn.addEventListener("click", function(e) {
-		socket.emit('message', 'client: swingbtn');
+		socket.send('bluetooth_server');
 		}, false);
 	}
 
