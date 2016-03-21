@@ -33,31 +33,54 @@ server.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
 
-var server_socket;
-var client_socket;
+
+var server_socket = null;
+var client_socket = null;
 
 io.on('connection', function(socket) {
 	console.log('server recieved connection');
+	console.log(socket.handshake.headers['x-forwarded-for']);
+	console.log(socket.handshake.headers['user-agent']);
 	socket.onclose = function(event) {
 		console.log('closed socket');
 		var socket_ip = socket.handshake.headers['x-forwarded-for'];
 		console.log(socket_ip);
+		console.log(socket.handshake.headers['user-agent']);
 		};
 
 	socket.on('message', function(data) {
 		var socket_ip = socket.handshake.headers['x-forwarded-for'];
 		console.log(socket_ip);
 		console.log(data);
-		if (data == "bluetooth_server") {
+		if (data == "bluetooth_server" && server_socket == null) {
 			server_socket = socket;
-			server_socket.send('you are bluetooth_server');
+			server_socket.onclose = function(event) {
+				console.log('closed server');
+				var socket_ip = socket.handshake.headers['x-forwarded-for'];
+				console.log(socket_ip);
+				server_socket = null;
+				};
+			server_socket.emit('assignment', 'server');
 			}
-		else if (client_socket == undefined) {
+		else if (	data == "client" &&
+					client_socket == null &&
+					server_socket != null) {
 			client_socket = socket;
-			client_socket.send('you are client');
 			client_socket.on('command', function(data) {
-				server_socket.send(data);
+				console.log('client command');
+				console.log(data);
+				server_socket.emit('command', data);
 				});
+			client_socket.onclose = function(event) {
+				console.log('closed client');
+				var socket_ip = socket.handshake.headers['x-forwarded-for'];
+				console.log(socket_ip);
+				client_socket = null;
+				};
+			client_socket.emit('assignment', 'client');
+			}
+		else {
+			socket.emit('assignment', 'none');
 			}
 		});
 //	socket.emit('message', 'server: test');

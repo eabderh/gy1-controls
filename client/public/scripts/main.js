@@ -10,13 +10,24 @@ window.onload = function() {
 	var element = document.getElementById("elias-text-test");
 
 
-	alert('page load');
+//	alert('page load');
 	var socket = io.connect('http://www.gyrobot.tech:80');
 	socket.on('message', function (data) {
 		alert(data);
 //		if (data) {
 //			element.innerHTML = data;
 //			}
+		});
+	socket.on('assignment', function (data) {
+		alert(data);
+		if (data == "client") {
+			onbtn.disabled = false;
+			offbtn.disabled = false;
+			swingbtn.disabled = false;
+			}
+		else if (data == "none") {
+			element.innerHTML = 'server not available';
+			}
 		});
 	socket.on('timer', function (data) {
 		if (data) {
