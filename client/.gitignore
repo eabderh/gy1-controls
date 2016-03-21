@@ -17,8 +17,10 @@
 .*.swp
 
 # additional
+node_modules
+
 **/.netrwhist
 
-AcknowledgeExample/target
+
 
 
