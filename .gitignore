@@ -1,2 +1,24 @@
-./client/node_modules
-.env
+
+# file itself
+#.gitignore
+
+# network
+.nfs*
+
+# c
+*.o
+*.a
+*.so
+
+# vim session
+.*.vs
+
+# swap files
+.*.swp
+
+# additional
+**/.netrwhist
+
+AcknowledgeExample/target
+
+
