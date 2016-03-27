@@ -40,11 +40,11 @@ window.onload = function() {
 		}, false);
 
 	onbtn.addEventListener("click", function(e) {
-		socket.emit('command', 'client: on');
+		socket.emit('command', 'on');
 		}, false);
 
 	offbtn.addEventListener("click", function(e) {
-		socket.emit('command', 'client: off');
+		socket.emit('command', 'off');
 		}, false);
 
 	swingbtn.addEventListener("click", function(e) {
