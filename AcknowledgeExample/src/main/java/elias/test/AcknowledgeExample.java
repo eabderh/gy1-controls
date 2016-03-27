@@ -16,7 +16,15 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 
+import org.json.*;
+
+//import java.io.InputStream;
+
 import java.util.concurrent.CountDownLatch;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+//import javax.comm.*;
+//import java.util.*; 
 
 //import org.json.JSONObject;
 /**
@@ -28,8 +36,11 @@ public class AcknowledgeExample {
     private TextField textField;
     private Panel controlPanel;
     private Frame mainFrame;
+    private SimpleRead comport;
     
     public static void main(String[] args) {
+
+
         System.out.println("Client started");
         try {
             new AcknowledgeExample();
@@ -41,6 +52,7 @@ public class AcknowledgeExample {
     private Socket mysocket;
 
     public AcknowledgeExample() throws Exception {
+        comport = new SimpleRead();
         mysocket = IO.socket("http://www.gyrobot.tech:80");
         mysocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
@@ -73,7 +85,14 @@ public class AcknowledgeExample {
             @Override
             public void call(Object... args) {
                 System.out.println("Command");
-                System.out.println(args[0]);
+                String command = args[0].toString();
+                System.out.println(command);
+                if (command.equals("on")) {
+                    comport.write('1');
+                }
+                else {
+                    comport.write('0');
+                }
             }
         });
         
@@ -124,7 +143,7 @@ public class AcknowledgeExample {
         frame.add(panel);
 
         
-        button = new JButton("test");
+        button = new JButton("Close");
         button.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -144,59 +163,4 @@ public class AcknowledgeExample {
     }
     
     
-    /*
-        mainFrame = new Frame("Java AWT Examples");
-        mainFrame.setSize(400,400);
-        mainFrame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent windowEvent){
-                System.exit(0);
-            }
-        });
-
-        
-        controlPanel = new Panel();
-        controlPanel.setLayout(new FlowLayout());
-        
-        KeyListener keyListener = new KeyListener() {
-
-            @Override
-            public void keyTyped(KeyEvent e) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                // TODO Auto-generated method stub
-                int keyCode = e.getKeyCode();
-                char keyChar = e.getKeyChar();
-
-                System.out.println("Code: "+keyCode+" , "+"Char: "+keyChar);
-
-                if (keyCode == KeyEvent.VK_ENTER) {
-                    System.out.println("Enter pressed");
-                    //do whatever you want here
-
-                }else if (keyCode == KeyEvent.VK_ESCAPE) {
-                    System.out.println("Esc pressed");
-                    //do whatever you want here
-                }
-            }
-        };
-        textField  = new TextField(10);
-        this.textField.addKeyListener(keyListener);
-        
-        mainFrame.add(controlPanel);
-        controlPanel.add(textField);
-        mainFrame.setVisible(true);
-        
-    }
-*/
-    
-} 
+}
