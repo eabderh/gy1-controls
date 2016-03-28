@@ -29,9 +29,12 @@ app.get('/', function(request, response) {
 });
 
 // vid.me link
-app.get('/video', function(request, response) {
-	response.redirect('https://vid.me/45XI');
+app.get('/videos', function(request, response) {
+	response.render('pages/videos');
 });
+// app.get('/video', function(request, response) {
+// 	response.redirect('https://vid.me/45XI');
+// });
 	// deletion link
 	// https://vid.me/delete/3uizkuoy1u80c4cgwws0408wk
 	// use this to delete the video
