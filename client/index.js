@@ -28,6 +28,24 @@ app.get('/', function(request, response) {
   console.log('Get request from %s', ip);
 });
 
+// vid.me link
+app.get('/video', function(request, response) {
+	response.redirect('https://vid.me/45XI');
+});
+	// deletion link
+	// https://vid.me/delete/3uizkuoy1u80c4cgwws0408wk
+	// use this to delete the video
+	// expires on 2016-04-20 (no joke)
+
+
+// vid.me link template
+//app.get('/balancing-video', function(request, response) {
+//	response.redirect('https://vid.me/');
+//	// deletion link
+//	// 
+//	// use this to delete the video
+//	// expires on 2016-04-20 (no joke)
+//});
 
 server.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
@@ -37,7 +55,8 @@ server.listen(app.get('port'), function() {
 var server_socket = null;
 var client_socket = null;
 
-io.on('connection', function(socket) {
+io 	.of('/')
+	.on('connection', function(socket) {
 	console.log('server recieved connection');
 	console.log(socket.handshake.headers['x-forwarded-for']);
 	console.log(socket.handshake.headers['user-agent']);
