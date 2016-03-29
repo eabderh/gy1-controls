@@ -74,7 +74,7 @@ io 	.of('/')
 		if (data == "bluetooth_server" && server_socket == null) {
 			server_socket = socket;
 			server_socket.onclose = function(event) {
-				console.log('closed server');
+				console.log('closed bt server');
 				var socket_ip = socket.handshake.headers['x-forwarded-for'];
 				console.log(socket_ip);
 				server_socket = null;
