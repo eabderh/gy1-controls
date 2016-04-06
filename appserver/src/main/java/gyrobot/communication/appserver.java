@@ -23,130 +23,159 @@ import java.util.logging.Logger;
  */
 public class appserver {
 
-    private SerialPortIO comport;
-    private Socket mysocket;
+	private SerialPortIO COMPort;
+	private Socket webSocket;
 
-    private JFrame frame;
-    private JPanel panel;
-    private JButton button;
+	private JFrame jFrame;
+	private JPanel jPanel;
+	private JButton jButton;
 
-    private final CountDownLatch exitlatch;
-
-    public static void main(String[] args) {
-        System.out.println("Client started");
-        try {
-            new appserver();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public appserver() throws Exception {
-        comport = new SerialPortIO();
-        mysocket = IO.socket("http://www.gyrobot.tech:80");
-        mysocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                System.out.println("Connected");
-                mysocket.emit("message","bluetooth_server");
-            }
-        });
-
-        mysocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                System.out.println("Socket Disconnected");
-            }
-        });
-
-        mysocket.on(Socket.EVENT_ERROR, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                System.out.println("Error");
-            }
-        });
-
-        mysocket.on("assignment", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                System.out.println(args[0]);
-            }
-        });
-        mysocket.on("command", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                System.out.println("Command");
-                String command = args[0].toString();
-                System.out.println(command);
-                if (command.equals("on")) {
-                    comport.write((byte) 1);
-                }
-                else {
-                    comport.write((byte) 0);
-                }
-            }
-        });
-
-        mysocket.connect();
-        while(!mysocket.connected()) {
-        }
-
-        System.out.println("test");
-
-        exitlatch = new CountDownLatch (1);
-
-
-        gui();
-
-        try {
-            exitlatch.await();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        //Thread.sleep(5000);
-        System.out.println("Shutdown");
-        mysocket.disconnect();
-        while(mysocket.connected()) {
-        }
-        mysocket.off();
-
-        frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+	private final CountDownLatch exitLatch;
 
 
 
-    }
+	public static void main(String[] args) {
+		System.out.println("Client started");
+		try {
+			new appserver();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
+	public appserver() throws Exception {
 
-    private void gui() {
-        System.out.println("gui");
-        frame = new JFrame("Bluetooth Server");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 400);
+		initCommunication();
+		COMPort.start();
+		webSocket.connect();
+		while(!webSocket.connected()) {}
 
-        panel = new JPanel(new GridBagLayout());
-        panel.setBackground(Color.LIGHT_GRAY);
-        frame.add(panel);
+		startGUI();
 
-        button = new JButton("Close");
-        button.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("stopserver init");
-                exitlatch.countDown();
-            }
-        }
-        );
-        button.setBorder(new LineBorder(Color.BLACK));
-        button.setPreferredSize(new Dimension(100,100));
-        button.setFocusPainted(false);
-        //button.setContentAreaFilled(false);
-        button.setBackground(Color.WHITE);
-        panel.add(button);
-        frame.setVisible(true);
-    }
+		exitLatch = new CountDownLatch(1);
+
+		try {
+			exitLatch.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("Shutdown");
+
+		webSocket.disconnect();
+		while(webSocket.connected()) {}
+
+		webSocket.off();
+		jFrame.dispatchEvent(
+			new WindowEvent(jFrame, WindowEvent.WINDOW_CLOSING)
+		);
+	}
+
+
+	public initCommunication() {
+		COMPort = new SerialPortIO();
+		webSocket = IO.socket("http://www.gyrobot.tech:80");
+
+
+		webSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+			@Override
+			public void call(Object... args) {
+				System.out.println("SOCK: connected");
+				webSocket.emit("message","bluetooth_server");
+			}
+		});
+		webSocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+			@Override
+			public void call(Object... args) {
+				System.out.println("SOCK: disconnected");
+				// garbage? supposed to reconnect
+				//if (exitLatch.getCount() != 0) {
+				//	// reconnect
+				//}
+			}
+		});
+		webSocket.on(Socket.EVENT_ERROR, new Emitter.Listener() {
+			@Override
+			public void call(Object... args) {
+				System.out.println("SOCK: error");
+			}
+		});
+		webSocket.on("assignment", new Emitter.Listener() {
+			@Override
+			public void call(Object... args) {
+				System.out.println("SOCK: assignment");
+				System.out.println(args[0]);
+			}
+		});
+		webSocket.on("command", new Emitter.Listener() {
+			@Override
+			public void call(Object... args) {
+				System.out.println("SOCK: command");
+				String command = args[0].toString();
+				System.out.println(command);
+				if (command.equals("on")) {
+					COMPort.write((byte) 1);
+				}
+				else {
+					COMPort.write((byte) 0);
+				}
+			}
+		});
+
+		COMPort.serialPortEventListener = new SerialPortEventListener() {
+			@Override
+			public void serialEvent(SerialPortEvent serialPortEvent) {
+				byte dataByte;
+				String dataStr;
+				System.out.println("SPIO: event");
+				if (serialPortEvent.isRXCHAR()) {
+				System.out.println("SPIO: rxchar");
+					System.out.println(	"SPIO: data bytes: %d",
+										serialPortEvent.getEventValue);
+					if (serialPortEvent.getEventValue == 1) {
+						try {
+							dataByte = serialPort.readByte();
+						}
+						catch (SerialPortException ex) {
+							System.out.println(ex);
+						}
+					}
+					dataStr = new String(dataByte);
+					webSocket.emit("angle",dataStr);
+				}
+			}
+		};
+	}
+
+
+	private void startGUI() {
+		jFrame = new JFrame("Bluetooth Server");
+		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jFrame.setSize(400, 400);
+
+		jPanel = new JPanel(new GridBagLayout());
+		jPanel.setBackground(Color.LIGHT_GRAY);
+		jFrame.add(jPanel);
+
+		jButton = new JButton("Close");
+		jButton.setBorder(new LineBorder(Color.BLACK));
+		jButton.setPreferredSize(new Dimension(100,100));
+		jButton.setFocusPainted(false);
+		jButton.setBackground(Color.WHITE);
+		jButton.addActionListener( new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("GUI: server shutdown initialized");
+				exitLatch.countDown();
+			}
+		});
+
+		jPanel.add(jButton);
+		jFrame.setVisible(true);
+		System.out.println("GUI: start");
+	}
 }
+
+
 
