@@ -7,6 +7,7 @@ package elias.test;
 
 
 import jssc.*;
+import jssc.SerialPortEventListener;
 
 /**
  *
@@ -15,6 +16,8 @@ import jssc.*;
 
 public class SimpleRead {
     private SerialPort serialPort;
+    private SerialPortEventListener listener;
+
     public SimpleRead(){
         String[] portNames = SerialPortList.getPortNames();
 
@@ -51,13 +54,23 @@ public class SimpleRead {
         catch (SerialPortException ex) {
             System.out.println(ex);
         }
+        
+        listener = new SerialPortEventListener() {
+            @Override
+            public void serialEvent(SerialPortEvent serialPortEvent) {
+                    return;
+            }
+        };
+
     }
     
     
-    public void write(char c) {
+
+    
+    public void write(byte c) {
 
         try {
-            serialPort.writeByte((byte) c);
+            serialPort.writeByte(c);
         }
         catch (SerialPortException ex) {
             System.out.println(ex);

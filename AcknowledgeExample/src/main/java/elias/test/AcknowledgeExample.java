@@ -58,13 +58,14 @@ public class AcknowledgeExample {
             @Override
             public void call(Object... args) {
                 System.out.println("Connected");
+                mysocket.emit("message","bluetooth_server");
             }
         });
         
         mysocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                System.out.println("Disconnected");
+                System.out.println("Socket Disconnected");
             }
         });
         
@@ -88,10 +89,10 @@ public class AcknowledgeExample {
                 String command = args[0].toString();
                 System.out.println(command);
                 if (command.equals("on")) {
-                    comport.write('1');
+                    comport.write((byte) 1);
                 }
                 else {
-                    comport.write('0');
+                    comport.write((byte) 0);
                 }
             }
         });
@@ -101,9 +102,14 @@ public class AcknowledgeExample {
         }
 
         System.out.println("test");
-        mysocket.emit("message","bluetooth_server");
 
         exitlatch = new CountDownLatch (1);
+        
+
+        
+        
+        
+        
         
         gui();
         
