@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package elias.test;
+package appserver.communication;
 
 
 import jssc.*;
@@ -22,7 +17,7 @@ public class SerialPortIO {
         String[] portNames = SerialPortList.getPortNames();
 
         if (portNames.length == 0) {
-            System.out.println("There are no serial-ports :( You can use an emulator, such ad VSPE, to create a virtual serial port.");
+            System.out.println("No serial-ports were found");
             System.out.println("Press Enter to exit...");
             try {
                 System.in.read();
@@ -36,25 +31,25 @@ public class SerialPortIO {
         for (int i = 0; i < portNames.length; i++){
             System.out.println(portNames[i]);
         }
-        
-        
+
+
         serialPort = new SerialPort("COM4");
         try {
             //Open port
             serialPort.openPort();
-            //We expose the settings. You can also use this line - serialPort.setParams(9600, 8, 1, 0);
-            serialPort.setParams(SerialPort.BAUDRATE_9600, 
+            // you can also use this line - serialPort.setParams(9600, 8, 1, 0);
+            serialPort.setParams(SerialPort.BAUDRATE_9600,
                                  SerialPort.DATABITS_8,
                                  SerialPort.STOPBITS_1,
                                  SerialPort.PARITY_NONE);
             //Writes data to port
 
-            
+
         }
         catch (SerialPortException ex) {
             System.out.println(ex);
         }
-        
+
         listener = new SerialPortEventListener() {
             @Override
             public void serialEvent(SerialPortEvent serialPortEvent) {
@@ -63,19 +58,15 @@ public class SerialPortIO {
         };
 
     }
-    
-    
 
-    
+
     public void write(byte c) {
-
         try {
             serialPort.writeByte(c);
         }
         catch (SerialPortException ex) {
             System.out.println(ex);
         }
-
     }
 }
 

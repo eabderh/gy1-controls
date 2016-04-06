@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package elias.test;
+package appserver.communication;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -18,15 +13,10 @@ import javax.swing.border.LineBorder;
 
 import org.json.*;
 
-//import java.io.InputStream;
-
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-//import javax.comm.*;
-//import java.util.*;
 
-//import org.json.JSONObject;
 /**
  *
  * @author EABDERH
@@ -105,11 +95,6 @@ public class appserver {
         System.out.println("test");
 
         exitlatch = new CountDownLatch (1);
-
-
-
-
-
 
 
         gui();
