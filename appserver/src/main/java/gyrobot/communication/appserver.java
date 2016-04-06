@@ -1,4 +1,4 @@
-package appserver.communication;
+package gyrobot.communication;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  */
 public class appserver {
 
-    private SerialPortCommunications comport;
+    private SerialPortIO comport;
     private Socket mysocket;
 
     private JFrame frame;
@@ -43,7 +43,7 @@ public class appserver {
 
 
     public appserver() throws Exception {
-        comport = new SerialPortCommunications();
+        comport = new SerialPortIO();
         mysocket = IO.socket("http://www.gyrobot.tech:80");
         mysocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
