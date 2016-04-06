@@ -24,35 +24,36 @@ import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 //import javax.comm.*;
-//import java.util.*; 
+//import java.util.*;
 
 //import org.json.JSONObject;
 /**
  *
  * @author EABDERH
  */
-public class AcknowledgeExample {
-    
-    private TextField textField;
-    private Panel controlPanel;
-    private Frame mainFrame;
-    private SimpleRead comport;
-    
+public class appserver {
+
+    private SerialPortCommunications comport;
+    private Socket mysocket;
+
+    private JFrame frame;
+    private JPanel panel;
+    private JButton button;
+
+    private final CountDownLatch exitlatch;
+
     public static void main(String[] args) {
-
-
         System.out.println("Client started");
         try {
-            new AcknowledgeExample();
+            new appserver();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-    private Socket mysocket;
 
-    public AcknowledgeExample() throws Exception {
-        comport = new SimpleRead();
+
+    public appserver() throws Exception {
+        comport = new SerialPortCommunications();
         mysocket = IO.socket("http://www.gyrobot.tech:80");
         mysocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
@@ -61,21 +62,21 @@ public class AcknowledgeExample {
                 mysocket.emit("message","bluetooth_server");
             }
         });
-        
+
         mysocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 System.out.println("Socket Disconnected");
             }
         });
-        
+
         mysocket.on(Socket.EVENT_ERROR, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 System.out.println("Error");
             }
         });
-        
+
         mysocket.on("assignment", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -96,7 +97,7 @@ public class AcknowledgeExample {
                 }
             }
         });
-        
+
         mysocket.connect();
         while(!mysocket.connected()) {
         }
@@ -104,51 +105,47 @@ public class AcknowledgeExample {
         System.out.println("test");
 
         exitlatch = new CountDownLatch (1);
-        
 
-        
-        
-        
-        
-        
+
+
+
+
+
+
         gui();
-        
+
         try {
             exitlatch.await();
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+
         //Thread.sleep(5000);
         System.out.println("Shutdown");
         mysocket.disconnect();
         while(mysocket.connected()) {
         }
         mysocket.off();
-        
+
         frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-        
-        
-        
+
+
+
     }
-    private JFrame frame;
-    private JPanel panel;
-    private JButton button;
-    
-    private final CountDownLatch exitlatch;
-    
+
+
+
     private void gui() {
         System.out.println("gui");
         frame = new JFrame("Bluetooth Server");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
-        
+
         panel = new JPanel(new GridBagLayout());
         panel.setBackground(Color.LIGHT_GRAY);
         frame.add(panel);
 
-        
         button = new JButton("Close");
         button.addActionListener( new ActionListener() {
             @Override
@@ -164,9 +161,7 @@ public class AcknowledgeExample {
         //button.setContentAreaFilled(false);
         button.setBackground(Color.WHITE);
         panel.add(button);
-        
         frame.setVisible(true);
     }
-    
-    
 }
+

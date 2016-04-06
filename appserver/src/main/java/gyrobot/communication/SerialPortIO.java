@@ -14,11 +14,11 @@ import jssc.SerialPortEventListener;
  * @author EABDERH
  */
 
-public class SimpleRead {
+public class SerialPortIO {
     private SerialPort serialPort;
     private SerialPortEventListener listener;
 
-    public SimpleRead(){
+    public SerialPortIO(){
         String[] portNames = SerialPortList.getPortNames();
 
         if (portNames.length == 0) {
