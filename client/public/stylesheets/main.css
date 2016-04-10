@@ -1,35 +1,37 @@
+
 .jumbotron {
     padding: 30px 0;
 }
 
-.btn-lg{
-	width: 200px;
-}
 
-#offbtn{
+#offbtn {
 	background-color: red;
 	color: white;
 	width: 200px;
     height: 130px;
-    margin-left: 40%;
+	margin: 10px auto;
+    /*margin-left: 40%;*/
 }
 
-#onbtn{
+#onbtn {
 	background-color: green;
 	color: white;
-	width: 200px;
+	width: 80%;
     height: 130px;
-    margin-left: 20%;
+	margin: 10px auto;
+    /*margin-left: 20%;*/
 }
 
-#ang{
+#angle {
 	text-align: center;
 }
-#ang-form{
+
+.output-box {
+	border: 2px solid;
+	border-radius: 6px;
+    height: 130px;
+	margin: 10px;
 	width: 200px;
+	margin: 10px auto;
 }
-.form-control{
-	height: 70px;
-	text-align: center;
-	font-size: 32px;
-}
+

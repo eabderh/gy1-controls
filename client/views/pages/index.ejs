@@ -7,41 +7,44 @@
 <body>
   <header role="banner">
   </header>
-  <div class="jumbotron text-center">
-    <div class="container">
+  <!--div class="container">
+    <div class="jumbotron text-center">
       <h1>Gyrobot Controls</h1>
     </div>
-  </div>
-  <div class="container">
+  </div-->
+  <div class="container-fluid">
+    <!--div class="jumbotron text-center">
+      <h1>Gyrobot Controls</h1>
+    </div-->
     <div class="row">
-      <div class="col-xs-12 col-xs-offset-5">
-        <button id="connectbtn" class="btn btn-primary btn-lg">Connect to Server</button>
-      </div><!-- /.col-xs-6 -->
+      <div class="col-md-12">
+        <button id="connectbtn" class="btn btn-primary btn-lg center-block">Connect to Server</button>
+      </div><!-- /.col-md-6 -->
     </div><!-- /.row -->
     <hr>
     <div class="row">
-      <div class="col-xs-5">
-        <button id="onbtn"class="btn btn-lg">ON</button>
-      </div><!-- /.col-xs-3 -->
-      <div id="ang"class="col-xs-2">
-        <div id="ang-form" class="form-group">
-          <label for="exampleInputEmail1">Angle Reading</label>
-          <input class="form-control" placeholder="0°">
+      <div class="col-md-4">
+        <button id="onbtn"class="btn btn-lg center-block">ON</button>
+      </div><!-- /.col-md-3 -->
+      <div id="ang"class="col-md-4">
+        <div id="angle" class="output-box center-block">
+          <!--label for="exampleInputEmail1">Angle Readin center-blockg</label>
+
+          <input class="form-control" placeholder="0°-->
+
         </div>
-      </div><!-- /.col-xs-6 -->
-      <div class="col-xs-5">
-        <button id="offbtn" class="btn btn-lg">OFF</button>
-      </div><!-- /.col-xs-3 -->
+      </div><!-- /.col-md-6 -->
+      <div class="col-md-4">
+        <button id="offbtn" class="btn btn-lg center-block">OFF</button>
+      </div><!-- /.col-md-3 -->
     </div><!-- /.row -->
     <hr>
     <div class="row">
-      <div class="col-xs-12 col-xs-offset-5">
-        <button class="btn btn-primary btn-lg">Start Swing Up</button>
-      </div><!-- /.col-xs-6 -->
+      <div class="col-md-12">
+        <button class="btn btn-primary btn-lg center-block">Start Swing Up</button>
+      </div><!-- /.col-md-6 -->
     </div><!-- /.row -->
     <hr>
-    <div id="elias-text-test">
-    </div>
   </div><!-- /.container -->
 </body>
 </html>
