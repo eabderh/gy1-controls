@@ -6,9 +6,12 @@ window.onload = function() {
 	var onbtn = document.getElementById("onbtn");
 	var offbtn = document.getElementById("offbtn");
 	var swingbtn = document.getElementById("swingbtn");
+	var anglebox = document.getElementById("anglebox");
 
 	var socket = io.connect('http://www.gyrobot.tech:80');
+
 	socket.on('message', function (data) {
+		//TODO add random messages handler
 		});
 	socket.on('assignment', function (data) {
 		if (data == "client") {
@@ -22,6 +25,7 @@ window.onload = function() {
 		});
 	socket.on('angle', function (data) {
 		if (data) {
+			anglebox.innerHTML = data;
 			}
 		});
 
@@ -41,7 +45,6 @@ window.onload = function() {
 		socket.send('bluetooth_server');
 		}, false);
 	}
-
 
 
 
