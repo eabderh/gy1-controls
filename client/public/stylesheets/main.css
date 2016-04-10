@@ -38,6 +38,11 @@
 		width:80%;
 		font-size: 25px;
 	}
+
+	.btn-primary{
+		height: 65px;
+	}
+
 	.output-box{
 		width: 80%;
 	}
