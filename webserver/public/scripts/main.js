@@ -7,31 +7,21 @@ window.onload = function() {
 	var offbtn = document.getElementById("offbtn");
 	var swingbtn = document.getElementById("swingbtn");
 
-	var element = document.getElementById("elias-text-test");
-
-
-//	alert('page load');
 	var socket = io.connect('http://www.gyrobot.tech:80');
 	socket.on('message', function (data) {
-		alert(data);
-//		if (data) {
-//			element.innerHTML = data;
-//			}
 		});
 	socket.on('assignment', function (data) {
-		alert(data);
 		if (data == "client") {
 			onbtn.disabled = false;
 			offbtn.disabled = false;
 			swingbtn.disabled = false;
 			}
 		else if (data == "none") {
-			element.innerHTML = 'server not available';
+			//TODO implement 'none' assignment handler
 			}
 		});
-	socket.on('timer', function (data) {
+	socket.on('angle', function (data) {
 		if (data) {
-			element.innerHTML = data.countdown;
 			}
 		});
 
