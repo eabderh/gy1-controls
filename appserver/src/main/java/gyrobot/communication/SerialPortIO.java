@@ -10,13 +10,17 @@ import jssc.SerialPortEventListener;
  */
 
 public class SerialPortIO {
-	private SerialPort serialPort;
-	private SerialPortEventListener serialPortEventListener;
+	public SerialPort serialPort;
+	//SerialPortEventListener serialPortEventListener;
 
+        public abstract class myserialPortEventListener implements SerialPortEventListener {
+
+            
+        }
 
 	public SerialPortIO(){
 		serialPort = new SerialPort("COM4");
-		portReadout();
+		//portReadout();
 	}
 
 
@@ -43,10 +47,10 @@ public class SerialPortIO {
 		try {
 			serialPort.openPort();
 			// you can also use this line - serialPort.setParams(9600, 8, 1, 0);
-			serialPort.setParams(SerialPort.BAUDRATE_9600,
-								 SerialPort.DATABITS_8,
-								 SerialPort.STOPBITS_1,
-								 SerialPort.PARITY_NONE);
+			serialPort.setParams(   SerialPort.BAUDRATE_9600,
+                                                SerialPort.DATABITS_8,
+                                                SerialPort.STOPBITS_1,
+                                                SerialPort.PARITY_NONE);
 		}
 		catch (SerialPortException ex) {
 			System.out.println(ex);
@@ -61,6 +65,20 @@ public class SerialPortIO {
 		catch (SerialPortException ex) {
 			System.out.println(ex);
 		}
+	}
+        
+        public byte read() {
+            byte c[] = null;
+		try {
+			c = serialPort.readBytes();
+		}
+		catch (SerialPortException ex) {
+			System.out.println(ex);
+		}
+                if (c != null) {
+                    return c[0];
+                }
+                return 0;
 	}
 }
 

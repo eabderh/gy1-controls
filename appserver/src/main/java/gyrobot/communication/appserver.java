@@ -6,6 +6,7 @@ import io.socket.emitter.Emitter;
 
 import java.awt.event.*;
 import java.awt.*;
+import java.net.URISyntaxException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -17,14 +18,20 @@ import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+import jssc.*;
+import jssc.SerialPortEventListener;
+import jssc.SerialPortException;
+import jssc.SerialPortEvent.*;
+
 /**
  *
  * @author EABDERH
  */
 public class appserver {
 
-	private SerialPortIO COMPort;
-	private Socket webSocket;
+	static SerialPortIO COMPort;
+	static Socket webSocket;
 
 	private JFrame jFrame;
 	private JPanel jPanel;
@@ -73,7 +80,7 @@ public class appserver {
 	}
 
 
-	public initCommunication() {
+	public void initCommunication() throws URISyntaxException {
 		COMPort = new SerialPortIO();
 		webSocket = IO.socket("http://www.gyrobot.tech:80");
 
@@ -122,32 +129,31 @@ public class appserver {
 				}
 			}
 		});
+                
 
-		COMPort.serialPortEventListener = new SerialPortEventListener() {
-			@Override
-			public void serialEvent(SerialPortEvent serialPortEvent) {
-				byte dataByte;
-				String dataStr;
-				System.out.println("SPIO: event");
-				if (serialPortEvent.isRXCHAR()) {
-				System.out.println("SPIO: rxchar");
-					System.out.println(	"SPIO: data bytes: %d",
-										serialPortEvent.getEventValue);
-					if (serialPortEvent.getEventValue == 1) {
-						try {
-							dataByte = serialPort.readByte();
-						}
-						catch (SerialPortException ex) {
-							System.out.println(ex);
-						}
-					}
-					dataStr = new String(dataByte);
-					webSocket.emit("angle",dataStr);
-				}
-			}
-		};
 	}
 
+        
+    static class myclass implements SerialPortEventListener {
+
+        public void serialEvent(SerialPortEvent serialPortEvent) {
+            byte dataByte = 0;
+            String dataStr;
+            System.out.println("SPIO: event");
+            if (serialPortEvent.isRXCHAR()) {
+                System.out.println("SPIO: rxchar");
+                System.out.printf( "SPIO: data bytes: %d",
+                                    (int) serialPortEvent.getEventValue());
+            if (serialPortEvent.getEventValue() == 1) {
+                dataByte = COMPort.read();
+            }
+            dataStr = String.valueOf((int) dataByte);
+            webSocket.emit("angle",dataStr);
+            }
+        }
+    };
+
+        
 
 	private void startGUI() {
 		jFrame = new JFrame("Bluetooth Server");
