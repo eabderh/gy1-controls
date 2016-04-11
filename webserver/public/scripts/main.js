@@ -6,7 +6,7 @@ window.onload = function() {
 	var onbtn = document.getElementById("onbtn");
 	var offbtn = document.getElementById("offbtn");
 	var swingbtn = document.getElementById("swingbtn");
-	var anglebox = document.getElementById("anglebox");
+	var statusbox = document.getElementById("statusbox");
 
 	var socket = io.connect('http://www.gyrobot.tech:80');
 
@@ -23,11 +23,6 @@ window.onload = function() {
 			//TODO implement 'none' assignment handler
 			}
 		});
-	socket.on('angle', function (data) {
-		if (data) {
-			anglebox.innerHTML = data;
-			}
-		});
 
 	connectbtn.addEventListener("click", function(e) {
 		socket.send('client');
@@ -35,10 +30,14 @@ window.onload = function() {
 
 	onbtn.addEventListener("click", function(e) {
 		socket.emit('command', 'on');
+		statusbox.innerHTML = "RUNNING";
+		statusbox.style.color="green";
 		}, false);
 
 	offbtn.addEventListener("click", function(e) {
 		socket.emit('command', 'off');
+		statusbox.innerHTML = "STOPPED";
+		statusbox.style.color="red";
 		}, false);
 
 	swingbtn.addEventListener("click", function(e) {

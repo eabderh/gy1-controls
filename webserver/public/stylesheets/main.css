@@ -19,10 +19,6 @@
     /*margin-left: 20%;*/
 }
 
-#anglebox {
-	text-align: center;
-}
-
 .output-box {
 	border: 2px solid;
 	border-radius: 6px;
@@ -30,6 +26,10 @@
 	margin: 10px;
 	width: 200px;
 	margin: 10px auto;
+	font-size: 30px;
+	text-align: center;
+	color: red;
+	line-height: 4;
 }
 
 @media only screen and (max-width: 768px) {
