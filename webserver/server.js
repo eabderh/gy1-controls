@@ -68,6 +68,11 @@ io.of('/').on('connection', function(socket) {
 					client_socket == null &&
 					server_socket != null) {
 			client_socket = socket;
+			client_socket.on('command', function(data) {
+				console.log('client command');
+				console.log(data);
+				server_socket.emit('command', data);
+				});
 			client_socket.onclose = function(event) {
 				console.log('sockets: closed client');
 				client_socket = null;

@@ -15,11 +15,14 @@ window.onload = function() {
 		});
 	socket.on('assignment', function (data) {
 		if (data == "client") {
+			statusbox.innerHTML = "CONNECTED"
+			statusbox.style.color="#337ab7";
 			onbtn.disabled = false;
 			offbtn.disabled = false;
 			swingbtn.disabled = false;
 			}
 		else if (data == "none") {
+			statusbox.innerHTML = "SERVER DOWN"
 			//TODO implement 'none' assignment handler
 			}
 		});
