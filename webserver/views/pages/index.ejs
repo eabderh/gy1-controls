@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include ../partials/header.ejs %>
+</head>
+<body>
+  <header role="banner">
+  </header>
+  <div class="container">
+    <div class="jumbotron text-center">
+      <h1>Gyrobot Controls</h1>
+    </div>
+  </div
+  <div class="container-fluid">
+    <!--div class="jumbotron text-center">
+      <h1>Gyrobot Controls</h1>
+    </div-->
+    <div class="row">
+      <div class="col-md-12">
+        <button id="connectbtn" class=" btn btn-primary btn-lg center-block">Connect to Server</button>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <button id="onbtn"class="user-btn btn btn-lg center-block" disabled>ON</button>
+      </div>
+      <div class="col-md-4">
+        <div id="statusbox" class="output-box center-block">DISCONNECTED</div>
+      </div>
+      <div class="col-md-4">
+        <button id="offbtn" class="btn user-btn btn-lg center-block" disabled>OFF</button>
+      </div>
+    </div>
+    <hr>
+  </div>
+</body>
+</html>

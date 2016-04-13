@@ -1,0 +1,52 @@
+
+.jumbotron {
+    padding: 30px 0;
+}
+.user-btn{
+	color: white;
+	width: 80%;
+    height: 130px;
+	margin: 10px auto;
+}
+
+#offbtn {
+	background-color: red;
+    /*margin-left: 40%;*/
+}
+
+#onbtn {
+	background-color: green;
+    /*margin-left: 20%;*/
+}
+
+.output-box {
+	border: 2px solid;
+	border-radius: 6px;
+    height: 130px;
+	margin: 10px;
+	width: 80%;
+	margin: 10px auto;
+	font-size: 30px;
+	text-align: center;
+	color: red;
+	line-height: 4;
+}
+
+@media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+    .btn-lg{
+		width:80%;
+		font-size: 25px;
+	}
+
+	.btn-primary{
+		height: 65px;
+	}
+
+	.output-box{
+		width: 80%;
+	}
+}
+
+
+
