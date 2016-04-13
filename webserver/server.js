@@ -50,13 +50,25 @@ io.of('/').on('connection', function(socket) {
 		//console.log(socket.handshake.headers['user-agent']);
 		console.log(data);
 
-		if (	data == "bluetooth_server" &&
+		if (	data == "appserver" &&
 				server_socket == null) {
 			server_socket = socket;
 			server_socket.onclose = function(event) {
 				console.log('sockets: closed appserver');
 				server_socket = null;
 				};
+			server_socket.on('status', function(data) {
+				console.log('sockets: appserver status');
+				console.log(data);
+				if (client_socket != null) {
+					if (data = "disconnected") {
+						client_socket.emit('assignment', 'none');
+						}
+					else {
+						client_socket.emit('assignment', 'client');
+						}
+					}
+				});
 			server_socket.on('angle', function(data) {
 				console.log('sockets: appserver angle');
 				console.log(data);

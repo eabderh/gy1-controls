@@ -30,110 +30,115 @@ import jssc.SerialPortEvent.*;
  */
 public class appserver {
 
-	static SerialPortIO COMPort;
-	static Socket webSocket;
+    static SerialPortIO COMPort;
+    static Socket webSocket;
 
-	private JFrame jFrame;
-	private JPanel jPanel;
-	private JButton jButton;
+    private JFrame jFrame;
+    private JPanel jPanel;
+    private JButton jButton;
 
-	private final CountDownLatch exitLatch;
-
-
-
-	public static void main(String[] args) {
-		System.out.println("Client started");
-		try {
-			new appserver();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    private final CountDownLatch exitLatch;
 
 
-	public appserver() throws Exception {
 
-		initCommunication();
-		COMPort.start();
-		webSocket.connect();
-		while(!webSocket.connected()) {}
-
-		startGUI();
-
-		exitLatch = new CountDownLatch(1);
-
-		try {
-			exitLatch.await();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		System.out.println("Shutdown");
-
-		webSocket.disconnect();
-		while(webSocket.connected()) {}
-
-		webSocket.off();
-		jFrame.dispatchEvent(
-			new WindowEvent(jFrame, WindowEvent.WINDOW_CLOSING)
-		);
-	}
+    public static void main(String[] args) {
+        System.out.println("Client started");
+        try {
+            new appserver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
-	public void initCommunication() throws URISyntaxException {
-		COMPort = new SerialPortIO();
-		webSocket = IO.socket("http://www.gyrobot.tech:80");
+    public appserver() throws Exception {
+
+        initCommunication();
+
+        startGUI();
+        webSocket.connect();
+        while(!webSocket.connected()) {}
+
+        serverReset();
+
+        exitLatch = new CountDownLatch(1);
+
+        try {
+            exitLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Shutdown");
+
+        webSocket.disconnect();
+        while(webSocket.connected()) {}
+
+        webSocket.off();
+        jFrame.dispatchEvent(
+            new WindowEvent(jFrame, WindowEvent.WINDOW_CLOSING)
+        );
+    }
 
 
-		webSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-			@Override
-			public void call(Object... args) {
-				System.out.println("SOCK: connected");
-				webSocket.emit("message","bluetooth_server");
-			}
-		});
-		webSocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-			@Override
-			public void call(Object... args) {
-				System.out.println("SOCK: disconnected");
-				// garbage? supposed to reconnect
-				//if (exitLatch.getCount() != 0) {
-				//	// reconnect
-				//}
-			}
-		});
-		webSocket.on(Socket.EVENT_ERROR, new Emitter.Listener() {
-			@Override
-			public void call(Object... args) {
-				System.out.println("SOCK: error");
-			}
-		});
-		webSocket.on("assignment", new Emitter.Listener() {
-			@Override
-			public void call(Object... args) {
-				System.out.println("SOCK: assignment");
-				System.out.println(args[0]);
-			}
-		});
-		webSocket.on("command", new Emitter.Listener() {
-			@Override
-			public void call(Object... args) {
-				System.out.println("SOCK: command");
-				String command = args[0].toString();
-				System.out.println(command);
-				if (command.equals("on")) {
-					COMPort.write((byte) 1);
-				}
-				else {
-					COMPort.write((byte) 0);
-				}
-			}
-		});
-                
+    public void initCommunication() throws URISyntaxException {
+        COMPort = new SerialPortIO();
+        webSocket = IO.socket("http://www.gyrobot.tech:80");
 
-	}
 
-        
+        webSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                System.out.println("SOCK: connected");
+            }
+        });
+        webSocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                System.out.println("SOCK: disconnected");
+                // garbage? supposed to reconnect
+                //if (exitLatch.getCount() != 0) {
+                //    // reconnect
+                //}
+            }
+        });
+        webSocket.on(Socket.EVENT_ERROR, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                System.out.println("SOCK: error");
+                webSocket.emit("message","appserver");
+            }
+        });
+        webSocket.on("assignment", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                System.out.println("SOCK: assignment");
+                System.out.println(args[0]);
+            }
+        });
+        webSocket.on("command", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                System.out.println("SOCK: command");
+                String command = args[0].toString();
+                System.out.println(command);
+                if (command.equals("on")) {
+                    COMPort.write((byte) 1);
+                }
+                else {
+                    COMPort.write((byte) 0);
+                }
+            }
+        });
+    }
+
+    public serverReset() {
+        webSocket.emit("status","disconnected");
+        COMPort.start();
+        webSocket.emit("status","connected");
+    }
+
+
     static class myclass implements SerialPortEventListener {
 
         public void serialEvent(SerialPortEvent serialPortEvent) {
@@ -155,32 +160,32 @@ public class appserver {
 
         
 
-	private void startGUI() {
-		jFrame = new JFrame("Bluetooth Server");
-		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jFrame.setSize(400, 400);
+    private void startGUI() {
+        jFrame = new JFrame("Bluetooth Server");
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jFrame.setSize(400, 400);
 
-		jPanel = new JPanel(new GridBagLayout());
-		jPanel.setBackground(Color.LIGHT_GRAY);
-		jFrame.add(jPanel);
+        jPanel = new JPanel(new GridBagLayout());
+        jPanel.setBackground(Color.LIGHT_GRAY);
+        jFrame.add(jPanel);
 
-		jButton = new JButton("Close");
-		jButton.setBorder(new LineBorder(Color.BLACK));
-		jButton.setPreferredSize(new Dimension(100,100));
-		jButton.setFocusPainted(false);
-		jButton.setBackground(Color.WHITE);
-		jButton.addActionListener( new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("GUI: server shutdown initialized");
-				exitLatch.countDown();
-			}
-		});
+        jButton = new JButton("Close");
+        jButton.setBorder(new LineBorder(Color.BLACK));
+        jButton.setPreferredSize(new Dimension(100,100));
+        jButton.setFocusPainted(false);
+        jButton.setBackground(Color.WHITE);
+        jButton.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("GUI: server shutdown initialized");
+                exitLatch.countDown();
+            }
+        });
 
-		jPanel.add(jButton);
-		jFrame.setVisible(true);
-		System.out.println("GUI: start");
-	}
+        jPanel.add(jButton);
+        jFrame.setVisible(true);
+        System.out.println("GUI: start");
+    }
 }
 
 
