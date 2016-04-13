@@ -90,6 +90,7 @@ public class appserver {
             @Override
             public void call(Object... args) {
                 System.out.println("SOCK: connected");
+                webSocket.emit("message","appserver");
             }
         });
         webSocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
@@ -106,7 +107,7 @@ public class appserver {
             @Override
             public void call(Object... args) {
                 System.out.println("SOCK: error");
-                webSocket.emit("message","appserver");
+
             }
         });
         webSocket.on("assignment", new Emitter.Listener() {
@@ -122,20 +123,26 @@ public class appserver {
                 System.out.println("SOCK: command");
                 String command = args[0].toString();
                 System.out.println(command);
-                if (command.equals("on")) {
-                    COMPort.write((byte) 1);
+                try {
+                    if (command.equals("on")) {
+                        COMPort.write((byte) 1);
+                    }
+                    else {
+                        COMPort.write((byte) 0);
+                    }
                 }
-                else {
-                    COMPort.write((byte) 0);
+                catch (SerialPortException ex) {
+                    serverReset();
                 }
             }
         });
     }
 
-    public serverReset() {
+    public void serverReset() {
         webSocket.emit("status","disconnected");
         COMPort.start();
         webSocket.emit("status","connected");
+        System.out.println("server reset");
     }
 
 
@@ -150,7 +157,7 @@ public class appserver {
                 System.out.printf( "SPIO: data bytes: %d",
                                     (int) serialPortEvent.getEventValue());
             if (serialPortEvent.getEventValue() == 1) {
-                dataByte = COMPort.read();
+                //dataByte = COMPort.read();
             }
             dataStr = String.valueOf((int) dataByte);
             webSocket.emit("angle",dataStr);

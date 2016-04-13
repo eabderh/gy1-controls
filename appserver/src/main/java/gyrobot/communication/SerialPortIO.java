@@ -62,27 +62,28 @@ public class SerialPortIO {
     }
 
 
-    public void write(byte c) {
+    public void write(byte c) throws SerialPortException {
         try {
             serialPort.writeByte(c);
         }
         catch (SerialPortException ex) {
-            System.out.println(ex);
+            //System.out.println(ex);
+            throw(ex);
         }
     }
  
-        public byte read() {
-            byte c[] = null;
+    public byte read() throws SerialPortException {
+        byte c[] = null;
         try {
             c = serialPort.readBytes();
         }
         catch (SerialPortException ex) {
-            System.out.println(ex);
+            throw(ex);
         }
-                if (c != null) {
-                    return c[0];
-                }
-                return 0;
+        if (c != null) {
+            return c[0];
+        }
+        return 0;
     }
 }
 
